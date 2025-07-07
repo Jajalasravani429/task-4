@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Web Development Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    nav {
+      background: rgb(172, 8, 172);
+      color: white;
+      padding: 25px;
+      text-align: center;
+      font-size: 18px;
+    }
+    @media (max-width: 768px) {
+     nav {
+    font-size: 16px;
+    }
+}
+    section, form, .container, .quiz, .carousel, .joke-section {
+      background: white;
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 700px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    img.center-img {
+      display: block;
+      margin: 20px auto;
+      max-width: 50%;
+      border-radius: 8px;
+    }
+
+    form input, form textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    form button, button {
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .quiz button {
+      margin: 5px;
+    }
+
+    .carousel img {
+      width: 100%;
+      max-width: 400px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 8px;
+    }
+
+    ul#taskList {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul#taskList li {
+      background: #ecf0f1;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        font-size: 16px;
+      }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      background: #2c3e50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>WEB DEVELOPMENT</h1>
+
+  <nav>Home | About | Contact</nav>
+
+  <section>
+    <p><strong>HTML</strong> builds the structure of a webpage.  
+       <strong>CSS</strong> styles the appearance.  
+       <strong>JavaScript</strong> makes it interactive.</p>
+    <img src="https://blog.boot.dev/img/800/HTML-vs-CSS-vs-JavaScript-min.webp" class="center-img" alt="HTML CSS JS">
+    <p>Visit <a href="https://www.example.com" target="_blank">Example Site</a> to learn more.</p>
+    <button onclick="showMessage()">Click Me!</button>
+  </section>
+
+  <form id="contactForm">
+    <h2>Contact Us</h2>
+    <label>Name:</label>
+    <input type="text" id="name" required>
+
+    <label>Email:</label>
+    <input type="email" id="email" required>
+
+    <label>Message:</label>
+    <textarea id="message" required></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <section>
+    <h2>To-Do List</h2>
+    <input type="text" id="taskInput" placeholder="Enter a task">
+    <button onclick="addTask()">Add</button>
+    <ul id="taskList"></ul>
+  </section>
+
+  <div class="container">
+    <h2>Responsive Web Page</h2>
+    <p>This text and layout adjust based on screen size.</p>
+  </div>
+
+  <div class="quiz">
+    <h2>What does CSS stand for?</h2>
+    <button onclick="checkAnswer(this)">Creative Style Sheets</button>
+    <button onclick="checkAnswer(this)">Cascading Style Sheets</button>
+    <button onclick="checkAnswer(this)">Colorful Style Sheets</button>
+    <p id="result"></p>
+  </div>
+
+  <div class="carousel">
+    <h2>Image Carousel</h2>
+    <img id="carouselImage" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEc9A_S6BPxCDRp5WjMFEfXrpCu1ya2OO-Lw&s" alt="Slide">
+    <br>
+    <button onclick="prevImage()">⏪ Prev</button>
+    <button onclick="nextImage()">Next ⏩</button>
+  </div>
+
+  <div class="joke-section">
+    <h2>Random Joke Generator</h2>
+    <button onclick="getJoke()">Get Joke</button>
+    <p id="joke"></p>
+  </div>
+<!-- Product Listing Section -->
+<div class="container">
+  <h2>Product Listing</h2>
+
+  <label for="categoryFilter">Filter by Category:</label>
+  <select id="categoryFilter" onchange="filterProducts()">
+    <option value="All">All</option>
+    <option value="Electronics">Electronics</option>
+    <option value="Clothing">Clothing</option>
+    <option value="Accessories">Accessories</option>
+  </select>
+
+  <label for="sortProducts">Sort by Price:</label>
+  <select id="sortProducts" onchange="sortProducts()">
+    <option value="default">Default</option>
+    <option value="low-high">Low to High</option>
+    <option value="high-low">High to Low</option>
+  </select>
+
+  <div id="productContainer"></div>
+</div>
+
+<script>
+  const productData = [
+    { name: "Laptop", category: "Electronics", price: 700 },
+    { name: "T-Shirt", category: "Clothing", price: 25 },
+    { name: "Headphones", category: "Accessories", price: 100 },
+    { name: "Smartphone", category: "Electronics", price: 500 },
+    { name: "Jeans", category: "Clothing", price: 40 },
+    { name: "Watch", category: "Accessories", price: 80 }
+  ];
+
+  let filteredProducts = [...productData];
+
+  function displayProducts() {
+    const container = document.getElementById("productContainer");
+    container.innerHTML = "";
+    filteredProducts.forEach(product => {
+      container.innerHTML += `<div><strong>${product.name}</strong> - ₹${product.price} <em>(${product.category})</em></div>`;
+    });
+  }
+
+  function filterProducts() {
+    const category = document.getElementById("categoryFilter").value;
+    filteredProducts = category === "All" 
+      ? [...productData] 
+      : productData.filter(p => p.category === category);
+    displayProducts();
+  }
+
+  function sortProducts() {
+    const sortOption = document.getElementById("sortProducts").value;
+    if (sortOption === "low-high") {
+      filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (sortOption === "high-low") {
+      filteredProducts.sort((a, b) => b.price - a.price);
+    } else {
+      filteredProducts = document.getElementById("categoryFilter").value === "All"
+        ? [...productData]
+        : productData.filter(p => p.category === document.getElementById("categoryFilter").value);
+    }
+    displayProducts();
+  }
+
+  // Display products on page load
+  window.onload = () => {
+    displayProducts();
+  };
+</script>
+
+  <footer>© 2025</footer>
+
+  <script>
+    function showMessage() {
+      alert("Thanks for clicking!");
+    }
+
+    // Contact Form Validation
+    document.getElementById("contactForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      if (!name || !email || !message) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      alert("Form submitted successfully!");
+      this.reset();
+    });
+
+    // To-Do List
+    function addTask() {
+      const taskInput = document.getElementById("taskInput");
+      const task = taskInput.value.trim();
+      if (task === "") return;
+
+      const li = document.createElement("li");
+      li.textContent = task;
+      li.onclick = function () {
+        this.remove();
+      };
+      document.getElementById("taskList").appendChild(li);
+      taskInput.value = "";
+    }
+
+    // Quiz
+    function checkAnswer(button) {
+      const answer = button.textContent;
+      const result = document.getElementById("result");
+      if (answer === "Cascading Style Sheets") {
+        result.textContent = "✅ Correct!";
+        result.style.color = "green";
+      } else {
+        result.textContent = "❌ Wrong! Try again.";
+        result.style.color = "red";
+      }
+    }
+
+    // Carousel
+    let current = 0;
+    const images = [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEc9A_S6BPxCDRp5WjMFEfXrpCu1ya2OO-Lw&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSubsfvX1GCHF8amyfEQxTz7AECFDY-oGMVTg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSubsfvX1GCHF8amyfEQxTz7AECFDY-oGMVTg&s"
+    ];
+
+    function showImage(index) {
+      document.getElementById("carouselImage").src = images[index];
+    }
+
+    function nextImage() {
+      current = (current + 1) % images.length;
+      showImage(current);
+    }
+
+    function prevImage() {
+      current = (current - 1 + images.length) % images.length;
+      showImage(current);
+    }
+
+    // Joke Generator
+    function getJoke() {
+      fetch("https://official-joke-api.appspot.com/random_joke")
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("joke").textContent = `${data.setup} - ${data.punchline}`;
+        })
+        .catch(() => {
+          document.getElementById("joke").textContent = "⚠️ Failed to load joke.";
+        });
+    }
+  </script>
+</body>
+</html>
+
+
